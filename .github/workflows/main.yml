@@ -27,7 +27,7 @@ jobs:
         run: pyinstaller --onefile --windowed --icon=GPX_Auslesen_TdF.ico GPX_auslesen.py
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@main
         with:
           name: GPX_Auslesen_Exe
           path: dist/GPX_auslesen.exe
