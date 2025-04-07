@@ -1,0 +1,39 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches:
+      - main  # Ändere "main" zu deinem Branch-Namen, falls notwendig
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'  # Falls du eine andere Python-Version brauchst, anpassen
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Install PyInstaller
+      run: pip install pyinstaller
+
+    - name: Build the .exe
+      run: pyinstaller --onefile --distpath ./dist --specpath ./build --add-data "GPX_Auslesen_TdF.icns:." GPX_auslesen.py
+
+    - name: Upload Windows executable
+      uses: actions/upload-artifact@v2
+      with:
+        name: GPX-Auslesen-Windows
+        path: ./dist/GPX\ Auslesen.exe
