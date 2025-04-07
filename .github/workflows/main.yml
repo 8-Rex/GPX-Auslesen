@@ -1,34 +1,33 @@
-name: Build Windows EXE with PyInstaller
+name: Build Windows EXE
 
 on:
   push:
-    branches:
-      - main  # oder dein Branch, der für den Build verwendet werden soll
+    paths:
+      - '**.py'
+      - '**.ico'
+      - '.github/workflows/**'
 
 jobs:
   build:
-    runs-on: windows-latest  # Windows-Runner, um die EXE zu erstellen
+    runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2  # Holen des Repositories
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.11'  # Die Python-Version, die du verwendest
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller openpyxl  # Installiere PyInstaller und openpyxl
+      - name: Install dependencies
+        run: pip install pyinstaller
 
-    - name: Build Windows EXE with PyInstaller
-      run: |
-        pyinstaller --onefile --icon=GPX_Auslesen_TdF.ico --distpath dist --workpath build GPX_auslesen.py  # Erstellen der EXE mit Icon
+      - name: Build EXE
+        run: pyinstaller --onefile --windowed --icon=GPX_Auslesen_TdF.ico GPX_auslesen.py
 
-    - name: Upload the EXE artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: GPX_Auslesen_Exe
-        path: dist/GPX\ Auslesen.exe  # Pfad zur erstellten EXE
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: GPX_Auslesen_Exe
+          path: dist/GPX_auslesen.exe
